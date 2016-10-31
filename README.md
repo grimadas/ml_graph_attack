@@ -10,6 +10,9 @@ The algorithm is trained and tested on new orleans facebook social graph {http:/
 
 * Run Edge_attack.ipynb for an extention model for attacking connections in a social graph
 
+You can exectute it online, without installing jupyter : 
+http://mybinder.org/repo/grimadas/ml_graph_attack
+
 ## Credits
 
 The code was written using the model described in  http://ksharad.com/publication/benchmarking_aisec/ 
