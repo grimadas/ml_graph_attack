@@ -138,7 +138,7 @@ def fill_set(G1, G2, data, labels, n_max=None):
         labels.append(1)
         indx += 1
         if indx % int(len(common)/10) ==0:
-            print("Finished : " + str(indx/len(common)))
+            print("Finished : " + str(float(indx)/len(common)))
         
     g1 = set(G1.edges()) - set(common)
     g2 = set(G2.edges()) - set(common)
@@ -155,4 +155,4 @@ def fill_set(G1, G2, data, labels, n_max=None):
         data.append(e_feature(G1, g1[i], G2, g2[i]))
         labels.append(0)
         if i % int(len(g1)/10) ==0:
-            print("Finished : " + str(i/len(g1)))
+            print("Finished : " + str(float(i)/len(g1)))

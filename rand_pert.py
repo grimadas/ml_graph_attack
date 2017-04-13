@@ -102,3 +102,4 @@ def link_mirage(G, M, t):
                         G_san.add_edge(a, b)
 
     return G_san
+
