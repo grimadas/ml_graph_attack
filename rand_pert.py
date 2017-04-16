@@ -4,7 +4,7 @@ from random import choice
 from random import random
 import community
 import itertools
-from lru import LRU
+#from lru import LRU
 
 
 def random_walk(G, v, t):
@@ -99,16 +99,15 @@ def smart_pertub(G, M, t, p_val, f, cache, w=None):
             else:
                 sh_paths = nx.single_source_shortest_path_length(G, source=v, cutoff=t - 1)
                 cache[v] = sh_paths
-
             while (z == u or _G.has_edge(u, z)) and loop <= M:
-                N = M
+                N = G.degree(u)
                 z = choice(sorted(
                     ((k, diff(f[v], f[k], w))
                      for k in sh_paths.keys()),
                     reverse=False, key=lambda x: x[1]
-                )[:N])
+                )[:N])[0]
                 loop += 1
-                N += M
+                
             if loop <= M:
                 if count == 1:
                     _G.add_edge(u, z)
@@ -190,7 +189,7 @@ def smart_link_anon(G, M, t, p_val, f, w=None):
     G_san = nx.Graph()
     for com_a in coms:
         list_nodes = [nodes for nodes in partition.keys() if partition[nodes] == com_a]
-        cache = LRU(list_nodes)
+        cache = {}
         G_ = nx.subgraph(G, list_nodes)
         term_edges = term_edges - set(G_.edges())
         G_anon_part = smart_pertub(G_, M, t, p_val, f, cache, w)
@@ -218,7 +217,7 @@ def smart_link_anon(G, M, t, p_val, f, w=None):
                     deg_b = len(set(G.neighbors(b)) & V_a_marg)
 
                     prob = float(deg_a * deg_b * len(V_a_marg)) / ((len(V_a_marg) + len(V_b_marg)) * len(edges_ab))
-
+                    prob = p_val
                     if random() <= prob:
                         G_san.add_edge(a, b)
 
