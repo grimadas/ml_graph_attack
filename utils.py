@@ -50,3 +50,22 @@ def calc_dist(G_orig, G_san):
     E1 = set(G_orig.edges())
     E2 = set(G_san.edges())
     return float(len(E1 | E2 - E1 & E2)) / len(E1)
+
+def read_mtx_graph(filename):
+    """
+    Read from file graph in mtx format
+    Return networkx graph
+    """
+    fh=open(filename, 'rb')
+    G = nx.Graph()
+    first_line = True
+    for line in fh:
+        if "%" in line:
+            continue
+        if first_line:
+            first_line = False
+            continue
+        u, v = line.split()
+        G.add_edge(int(u), int(v))
+    fh.close()
+    return G

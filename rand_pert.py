@@ -53,7 +53,10 @@ def rand_pertub(G, M, t, p_val):
     return _G
 
 
-def diff(f1, f2, w=None):
+def diff(f, u, v, w=None):
+    f1 = f[u]
+    f2 = f[v]
+  
     if w is None:
         w = [1.0 for k in range(len(f1))]
     res = 0.0
@@ -65,13 +68,15 @@ def diff(f1, f2, w=None):
 
 def calc_features(G):
     # Average Neighbours degree
-    av_deg = (k for k in nx.average_neighbor_degree(G).values())
+    f = {}
+    av_deg = nx.average_neighbor_degree(G)
     # Average degree centrality
-    degs = (k for k in nx.degree_centrality(G).values())
+    degs = nx.degree_centrality(G)
     # Clustering coef
-    centrs = (k for k in nx.clustering(G).values())
-
-    return [(k, v, z) for k, v, z in zip(degs, centrs, av_deg)]
+    centrs = nx.clustering(G)
+    for v in G.nodes():
+        f[v] = (degs[v], centrs[v], av_deg[v])
+    return f
 
 
 def smart_pertub(G, M, t, p_val, f, cache, w=None):
@@ -101,11 +106,15 @@ def smart_pertub(G, M, t, p_val, f, cache, w=None):
                 cache[v] = sh_paths
             while (z == u or _G.has_edge(u, z)) and loop <= M:
                 N = G.degree(u)
+                assert(len(sh_paths.keys()) > 1)
+                
                 z = choice(sorted(
-                    ((k, diff(f[v], f[k], w))
+                    ((k, diff(f, v, k, w))
                      for k in sh_paths.keys()),
                     reverse=False, key=lambda x: x[1]
-                )[:N])[0]
+                )[:N])
+                assert(len(z)>1)
+                z = z[0]
                 loop += 1
                 
             if loop <= M:
