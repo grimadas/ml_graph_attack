@@ -106,7 +106,10 @@ def smart_pertub(G, M, t, p_val, f, cache, w=None):
                 cache[v] = sh_paths
             while (z == u or _G.has_edge(u, z)) and loop <= M:
                 N = G.degree(u)
-                assert(len(sh_paths.keys()) > 1)
+                if len(sh_paths.keys()) == 0:
+                    loop = M+1
+                    break
+                
                 
                 z = choice(sorted(
                     ((k, diff(f, v, k, w))
